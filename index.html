@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALERTA NACIONAL VEICULO ROUBADO</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        h1 {
+            color: black;
+            font-size: 1.5em;
+            text-align: center;
+        }
+        p {
+            color: black;
+            font-size: 0.8em;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+        }
+        input, textarea, select {
+            margin-top: 5px;
+            padding: 10px;
+            font-size: 1em;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 1em;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+        .alert-box {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .alert-box button {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ALERTA NACIONAL VEICULO ROUBADO</h1>
+        <p>Criador Sinval Pereira</p>
+        <form id="alertForm">
+            <label for="tipoVeiculo">Tipo de Veículo:</label>
+            <input type="text" id="tipoVeiculo" name="tipoVeiculo" required>
+
+            <label for="modelo">Modelo:</label>
+            <input type="text" id="modelo" name="modelo" required>
+
+            <label for="ano">Ano:</label>
+            <input type="number" id="ano" name="ano" required>
+
+            <label for="cor">Cor:</label>
+            <input type="text" id="cor" name="cor" required>
+
+            <label for="nome">Seu Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+
+            <label for="empresa">Empresa:</label>
+            <input type="text" id="empresa" name="empresa" required>
+
+            <label for="telefone">Telefone:</label>
+            <input type="tel" id="telefone" name="telefone" required>
+
+            <label for="localizacaoOcorrencia">Localização da Ocorrência:</label>
+            <input type="text" id="localizacaoOcorrencia" name="localizacaoOcorrencia" required>
+
+            <label for="ultimaLocalizacao">Última Localização do Rastreador:</label>
+            <input type="text" id="ultimaLocalizacao" name="ultimaLocalizacao" required>
+
+            <label for="descricaoOcorrencia">Como foi a Ocorrência:</label>
+            <textarea id="descricaoOcorrencia" name="descricaoOcorrencia" required></textarea>
+
+            <label for="fotoCaminhao">Foto do Caminhão:</label>
+            <input type="file" id="fotoCaminhao" name="fotoCaminhao" accept="image/*" required>
+
+            <button type="button" onclick="confirmAlert()">ENVIAR ALERTA</button>
+        </form>
+
+        <div id="confirmationBox" class="alert-box hidden">
+            <p>Atenção, ao enviar um alerta você se responsabiliza cível e criminalmente por todas as informações passadas. Você tem certeza?</p>
+            <button onclick="submitAlert()">SIM</button>
+            <button onclick="cancelAlert()">NÃO</button>
+        </div>
+
+        <div id="successBox" class="hidden">
+            <h2>ATENÇÃO</h2>
+            <p>Você ainda tem chance de recuperar seu caminhão! Siga os passos a seguir:</p>
+            <ul>
+                <li>Aperte o botão abaixo escrito "ALERTA"</li>
+                <li>Envie o download da imagem para o whatsapp 11960805079</li>
+                <li>Faça a ocorrência em todos os canais a seguir: POLICIA CIVIL, POLICIA MILITAR, POLICIA RODOVIARIA FEDERAL.</li>
+            </ul>
+            <button onclick="generateAlertImage()">ALERTA</button>
+            <div id="alertLinks" class="hidden">
+                <button onclick="window.open('http://www.vacinacontraroubo.com.br', '_blank')">POLICIA CIVIL</button>
+                <button onclick="window.open('http://www.vacinacontraroubo.com.br', '_blank')">POLICIA MILITAR</button>
+                <button onclick="window.open('http://www.vacinacontraroubo.com.br', '_blank')">POLICIA RODOVIARIA FEDERAL</button>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="alertCanvas" class="hidden"></canvas>
+
+    <script>
+        function confirmAlert() {
+            document.getElementById('alertForm').classList.add('hidden');
+            document.getElementById('confirmationBox').classList.remove('hidden');
+        }
+
+        function cancelAlert() {
+            document.getElementById('alertForm').classList.remove('hidden');
+            document.getElementById('confirmationBox').classList.add('hidden');
+        }
+
+        function submitAlert() {
+            document.getElementById('confirmationBox').classList.add('hidden');
+            document.getElementById('successBox').classList.remove('hidden');
+        }
+
+        function generateAlertImage() {
+            const canvas = document.getElementById('alertCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 1080;
+            canvas.height = 1080;
+
+            const tipoVeiculo = document.getElementById('tipoVeiculo').value;
+            const modelo = document.getElementById('modelo').value;
+            const ano = document.getElementById('ano').value;
+            const cor = document.getElementById('cor').value;
+            const nome = document.getElementById('nome').value;
+            const empresa = document.getElementById('empresa').value;
+            const telefone = document.getElementById('telefone').value;
+            const localizacaoOcorrencia = document.getElementById('localizacaoOcorrencia').value;
+            const ultimaLocalizacao = document.getElementById('ultimaLocalizacao').value;
+            const descricaoOcorrencia = document.getElementById('descricaoOcorrencia').value;
+            const fotoCaminhao = document.getElementById('fotoCaminhao').files[0];
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    // Desenha o fundo branco
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    // Desenha a imagem do caminhão
+                    const imgWidth = canvas.width * 0.9;
+                    const imgHeight = canvas.height * 0.5;
+                    ctx.drawImage(img, (canvas.width - imgWidth) / 2, 100, imgWidth, imgHeight);
+
+                    // Desenha o título "CAMINHÃO ROUBADO"
+                    ctx.fillStyle = 'red';
+                    ctx.font = '50px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('CAMINHÃO ROUBADO', canvas.width / 2, 70);
+
+                    // Desenha as informações na parte inferior, centralizadas
+                    ctx.fillStyle = 'black';
+                    ctx.font = '20px Arial';
+                    const infoYStart = canvas.height - 300;
+                    const lineHeight = 25;
+                    const infoX = canvas.width / 2;
+
+                    ctx.fillText(`Tipo de Veículo: ${tipoVeiculo}`, infoX, infoYStart);
+                    ctx.fillText(`Modelo: ${modelo}`, infoX, infoYStart + lineHeight);
+                    ctx.fillText(`Ano: ${ano}`, infoX, infoYStart + 2 * lineHeight);
+                    ctx.fillText(`Cor: ${cor}`, infoX, infoYStart + 3 * lineHeight);
+                    ctx.fillText(`Nome: ${nome}`, infoX, infoYStart + 4 * lineHeight);
+                    ctx.fillText(`Empresa: ${empresa}`, infoX, infoYStart + 5 * lineHeight);
+                    ctx.fillText(`Telefone: ${telefone}`, infoX, infoYStart + 6 * lineHeight);
+                    ctx.fillText(`Localização da Ocorrência: ${localizacaoOcorrencia}`, infoX, infoYStart + 7 * lineHeight);
+                    ctx.fillText(`Última Localização: ${ultimaLocalizacao}`, infoX, infoYStart + 8 * lineHeight);
+                    ctx.fillText(`Descrição: ${descricaoOcorrencia}`, infoX, infoYStart + 9 * lineHeight);
+
+                    // Desenha o texto no canto inferior central
+                    ctx.fillStyle = 'blue';
+                    ctx.font = '15px Arial';
+                    ctx.fillText('REDE COLABORATIVA APOIO: SINVAL VACINA CONTRA ROUBO', infoX, canvas.height - 20);
+
+                    // Cria o link para download da imagem
+                    const link = document.createElement('a');
+                    link.download = 'alerta_caminhao_roubado.png';
+                    link.href = canvas.toDataURL();
+                    link.click();
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(fotoCaminhao);
+
+            document.getElementById('alertLinks').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
